@@ -191,7 +191,7 @@
           <span class="badge red">IELTS Academic</span>
           <h1>Luyện thi IELTS mỗi ngày, đủ 4 kỹ năng</h1>
           <p class="lead">Làm bài có bấm giờ, chấm điểm tự động, xem giải thích đáp án và theo dõi band điểm của bạn — hoàn toàn trên trình duyệt.</p>
-          <div class="row"><a class="btn primary" href="#/reading">Bắt đầu với Reading</a><a class="btn" href="#/speaking">Luyện Speaking</a></div>
+          <div class="row"><a class="btn primary" href="#reading">Bắt đầu với Reading</a><a class="btn" href="#speaking">Luyện Speaking</a></div>
         </div>
         <div class="card" style="text-align:center">
           <div class="band-ring" style="--p:${pct}"><div><div class="muted small">Overall</div><strong>${fmtBand(avg.overall)}</strong></div></div>
@@ -199,7 +199,7 @@
         </div>
       </section>
       <div class="grid">
-        ${skills.map(([k, i, t, d]) => `<a class="card skill-card" href="#/${k}"><span class="icon">${i}</span><h3>${t}</h3><p class="muted small" style="margin:0">${d}</p>${avg[k] !== undefined ? `<span class="badge">Band: ${fmtBand(avg[k])}</span>` : ""}</a>`).join("")}
+        ${skills.map(([k, i, t, d]) => `<a class="card skill-card" href="#${k}"><span class="icon">${i}</span><h3>${t}</h3><p class="muted small" style="margin:0">${d}</p>${avg[k] !== undefined ? `<span class="badge">Band: ${fmtBand(avg[k])}</span>` : ""}</a>`).join("")}
       </div>
       <h2 style="margin-top:32px">Mẹo nhanh</h2>
       <div class="grid">
@@ -218,7 +218,7 @@
         <div><h3>${esc(t.title)}</h3><div class="muted small">${t.desc ? esc(t.desc) + " · " : ""}${countQuestions(t.groups)} câu${t.minutes ? " · " + t.minutes + " phút" : ""}</div></div>
         <div class="spacer"></div>
         ${last ? `<span class="badge">Lần trước: ${last.correct}/${last.total} · Band ${fmtBand(last.band)}</span>` : ""}
-        <a class="btn primary" href="#/${kind}/${t.id}">Làm bài</a></div>`;
+        <a class="btn primary" href="#${kind}-${t.id}">Làm bài</a></div>`;
     }).join("")}</div>`;
   }
 
@@ -231,13 +231,13 @@
     if (!t) return notFound();
     const prefix = "r";
     app.innerHTML = `
-      <div class="test-head"><a class="btn small" href="#/reading">← Danh sách</a><h2 style="margin:0">${esc(t.title)}</h2><div class="spacer"></div><span class="timer" id="timer"></span></div>
+      <div class="test-head"><a class="btn small" href="#reading">← Danh sách</a><h2 style="margin:0">${esc(t.title)}</h2><div class="spacer"></div><span class="timer" id="timer"></span></div>
       <div id="result"></div>
       <div class="split">
         <article class="card passage"><h2>${esc(t.title)}</h2>${t.paragraphs.map(([l, p]) => `<p><span class="para-label">${l}</span>${esc(p)}</p>`).join("")}</article>
         <form class="stack" id="qform">${renderGroups(t.groups, prefix)}<button class="btn primary" type="submit">Nộp bài</button></form>
       </div>`;
-    const timer = countdown($("#timer"), t.minutes * 60, () => { alert("Hết giờ! Bài làm sẽ được nộp."); submit(); });
+    const timer = countdown($("#timer"), t.minutes * 60, () => submit());
     let done = false;
     function submit() {
       if (done) return; done = true; timer.stop();
@@ -264,7 +264,7 @@
     if (!t) return notFound();
     const prefix = "l";
     app.innerHTML = `
-      <div class="test-head"><a class="btn small" href="#/listening">← Danh sách</a><h2 style="margin:0">${esc(t.title)}</h2></div>
+      <div class="test-head"><a class="btn small" href="#listening">← Danh sách</a><h2 style="margin:0">${esc(t.title)}</h2></div>
       <div id="result"></div>
       <div class="card stack">
         <div class="row">
@@ -284,7 +284,6 @@
     const playBtn = $("#play"), stopBtn = $("#stop"), status = $("#status");
     playBtn.disabled = !tts.supported;
     playBtn.onclick = async () => {
-      if (plays >= 1 && !confirm("Trong bài thi thật bạn chỉ được nghe một lần. Vẫn nghe lại?")) return;
       plays++;
       playing = true; playBtn.disabled = true; stopBtn.disabled = false;
       const rate = parseFloat($("#rate").value);
@@ -293,7 +292,7 @@
         await tts.speak(t.script[i][1], t.script[i][0], rate);
         if (playing) await new Promise((r) => setTimeout(r, 350));
       }
-      if (playing) status.textContent = "Đã phát xong. Kiểm tra lại đáp án và nộp bài.";
+      if (playing) status.textContent = plays > 1 ? "Đã phát xong. Lưu ý: bài thi thật chỉ cho nghe một lần." : "Đã phát xong. Kiểm tra lại đáp án và nộp bài.";
       playing = false; playBtn.disabled = false; stopBtn.disabled = true;
     };
     stopBtn.onclick = () => { playing = false; tts.stop(); status.textContent = "Đã dừng."; };
@@ -352,7 +351,7 @@
   function pageWritingList() {
     const card = (t, task) => `<div class="card list-item"><span class="badge red">Task ${task}</span>
       <div style="flex:1;min-width:200px"><h3>${esc(t.title || t.type)}</h3><div class="muted small">${esc(t.prompt.slice(0, 120))}…</div></div>
-      <a class="btn primary" href="#/writing/${t.id}">Viết bài</a></div>`;
+      <a class="btn primary" href="#writing-${t.id}">Viết bài</a></div>`;
     app.innerHTML = `<h1>Writing</h1>
       <p class="muted">Task 1: tối thiểu 150 từ trong 20 phút. Task 2: tối thiểu 250 từ trong 40 phút. Bài viết được tự động lưu nháp trên trình duyệt.</p>
       <h2>Task 1 – Mô tả biểu đồ</h2><div class="list">${D.writing.task1.map((t) => card(t, 1)).join("")}</div>
@@ -389,7 +388,7 @@
       : ["Trả lời đầy đủ mọi phần của đề", "Nêu rõ quan điểm (nếu đề yêu cầu)", "Mỗi đoạn thân bài có 1 ý chính + giải thích + ví dụ", "Có đoạn kết luận", "Dùng từ nối đa dạng, không lặp từ"];
 
     app.innerHTML = `
-      <div class="test-head"><a class="btn small" href="#/writing">← Danh sách</a><h2 style="margin:0">Writing Task ${num}${task.type ? " · " + esc(task.type) : ""}</h2><div class="spacer"></div>
+      <div class="test-head"><a class="btn small" href="#writing">← Danh sách</a><h2 style="margin:0">Writing Task ${num}${task.type ? " · " + esc(task.type) : ""}</h2><div class="spacer"></div>
         <button class="btn small" id="startTimer">⏱ Bấm giờ ${minutes} phút</button><span class="timer" id="timer" hidden></span></div>
       <div class="split">
         <div class="stack">
@@ -430,7 +429,7 @@
     $("#startTimer").onclick = (e) => {
       e.target.hidden = true;
       const el = $("#timer"); el.hidden = false;
-      countdown(el, minutes * 60, () => alert("Hết giờ! Hãy dừng bút và kiểm tra lại bài."));
+      countdown(el, minutes * 60, () => { el.textContent = "Hết giờ!"; });
     };
 
     $("#analyzeBtn").onclick = () => {
@@ -526,8 +525,8 @@
     app.innerHTML = `<h1>Speaking</h1>
       <p class="muted">Bài thi Speaking kéo dài 11–14 phút gồm 3 phần. Câu hỏi được đọc bằng giọng tổng hợp; bạn có thể ghi âm để nghe lại phần trả lời của mình.</p>
       <div class="grid">
-        <div class="card"><span class="badge red">Part 1 · 4–5 phút</span><h3 style="margin-top:8px">Câu hỏi quen thuộc</h3><p class="small muted">Chọn chủ đề:</p><div class="chips">${S.part1.map((p, i) => `<a class="chip" href="#/speaking/p1/${i}">${esc(p.topic)}</a>`).join("")}</div></div>
-        <div class="card"><span class="badge red">Part 2 + 3 · 7–9 phút</span><h3 style="margin-top:8px">Cue card & thảo luận</h3><p class="small muted">1 phút chuẩn bị, nói 1–2 phút, sau đó thảo luận sâu.</p><div class="list">${S.part2.map((c) => `<a href="#/speaking/p2/${c.id}">${esc(c.topic)}</a>`).join("")}</div></div>
+        <div class="card"><span class="badge red">Part 1 · 4–5 phút</span><h3 style="margin-top:8px">Câu hỏi quen thuộc</h3><p class="small muted">Chọn chủ đề:</p><div class="chips">${S.part1.map((p, i) => `<a class="chip" href="#speaking-p1-${i}">${esc(p.topic)}</a>`).join("")}</div></div>
+        <div class="card"><span class="badge red">Part 2 + 3 · 7–9 phút</span><h3 style="margin-top:8px">Cue card & thảo luận</h3><p class="small muted">1 phút chuẩn bị, nói 1–2 phút, sau đó thảo luận sâu.</p><div class="list">${S.part2.map((c) => `<a href="#speaking-p2-${c.id}">${esc(c.topic)}</a>`).join("")}</div></div>
       </div>
       <h2 style="margin-top:28px">Cụm từ hữu ích</h2>
       <div class="card table-scroll"><table>${S.phrases.map(([k, v]) => `<tr><th style="width:30%">${esc(k)}</th><td>${esc(v)}</td></tr>`).join("")}</table></div>`;
@@ -537,7 +536,7 @@
     const p = D.speaking.part1[+idx];
     if (!p) return notFound();
     let i = 0;
-    app.innerHTML = `<div class="test-head"><a class="btn small" href="#/speaking">← Speaking</a><h2 style="margin:0">Part 1 · ${esc(p.topic)}</h2></div>
+    app.innerHTML = `<div class="test-head"><a class="btn small" href="#speaking">← Speaking</a><h2 style="margin:0">Part 1 · ${esc(p.topic)}</h2></div>
       <div class="card stack" id="box"></div>
       <div style="margin-top:16px">${speakingRating("p1-" + idx, "Part 1: " + p.topic)}</div>`;
     const box = $("#box");
@@ -563,7 +562,7 @@
   function pageSpeakingP2(id) {
     const c = D.speaking.part2.find((x) => x.id === id);
     if (!c) return notFound();
-    app.innerHTML = `<div class="test-head"><a class="btn small" href="#/speaking">← Speaking</a><h2 style="margin:0">Part 2 · Cue card</h2><div class="spacer"></div><span class="timer" id="timer">01:00</span></div>
+    app.innerHTML = `<div class="test-head"><a class="btn small" href="#speaking">← Speaking</a><h2 style="margin:0">Part 2 · Cue card</h2><div class="spacer"></div><span class="timer" id="timer">01:00</span></div>
       <div class="split">
         <div class="stack">
           <div class="cue-card"><h3>${esc(c.topic)}</h3>You should say:<ul>${c.points.map((pt) => `<li>${esc(pt)}</li>`).join("")}</ul></div>
@@ -694,22 +693,25 @@
       ${hist.length ? `<div class="card table-scroll"><table><thead><tr><th>Ngày</th><th>Kỹ năng</th><th>Bài</th><th>Kết quả</th><th>Band</th></tr></thead><tbody>
         ${hist.map((h) => `<tr><td class="small">${new Date(h.date).toLocaleString("vi-VN")}</td><td>${names[h.skill] || h.skill}</td><td>${esc(h.title || h.testId)}</td><td>${h.total ? h.correct + "/" + h.total : h.words ? h.words + " từ" : "tự chấm"}</td><td><b>${fmtBand(h.band)}</b></td></tr>`).join("")}
         </tbody></table></div>
-        <button class="btn" id="clear" style="margin-top:16px">Xóa toàn bộ lịch sử</button>` : `<div class="card muted">Chưa có bài làm nào. <a href="#/reading">Bắt đầu với Reading →</a></div>`}`;
+        <button class="btn" id="clear" style="margin-top:16px">Xóa toàn bộ lịch sử</button>` : `<div class="card muted">Chưa có bài làm nào. <a href="#reading">Bắt đầu với Reading →</a></div>`}`;
     const c = $("#clear");
-    if (c) c.onclick = () => { if (confirm("Xóa toàn bộ lịch sử làm bài?")) { store.set("history", []); pageProgress(); } };
+    if (c) c.onclick = () => {
+      if (c.dataset.armed) { store.set("history", []); pageProgress(); return; }
+      c.dataset.armed = "1"; c.textContent = "Bấm lần nữa để xác nhận xóa";
+    };
   }
 
   function notFound() {
-    app.innerHTML = `<div class="card"><h2>Không tìm thấy trang</h2><a href="#/">← Về trang chủ</a></div>`;
+    app.innerHTML = `<div class="card"><h2>Không tìm thấy trang</h2><a href="#">← Về trang chủ</a></div>`;
   }
 
   /* ================= Router ================= */
   function route() {
     runCleanups();
     tts.stop();
-    const parts = (location.hash.replace(/^#\/?/, "") || "").split("/").filter(Boolean);
+    const parts = (location.hash.replace(/^#\/?/, "") || "").split(/[-\/]/).filter(Boolean);
     const [p0, p1, p2] = parts;
-    $$(".nav a").forEach((a) => a.classList.toggle("active", a.getAttribute("href") === "#/" + (p0 || "")));
+    $$(".nav a").forEach((a) => a.classList.toggle("active", a.getAttribute("href") === "#" + (p0 || "")));
     $(".nav").classList.remove("open");
     $(".menu-btn").setAttribute("aria-expanded", "false");
     if (!p0) pageHome();

@@ -9,19 +9,24 @@
 </head>
 <body>
   <header class="topbar">
-    <a href="#" class="brand"><span class="logo">IE</span> IELTS Practice</a>
-    <button class="menu-btn" aria-label="Mở menu" aria-expanded="false">☰</button>
-    <nav class="nav">
-      <a href="#">Trang chủ</a>
-      <a href="#reading">Reading</a>
-      <a href="#listening">Listening</a>
-      <a href="#writing">Writing</a>
-      <a href="#speaking">Speaking</a>
-      <a href="#vocab">Từ vựng</a>
-      <a href="#progress">Tiến độ</a>
+    <a href="#" class="brand"><span class="logo">IE</span> <span>IELTS Practice</span></a>
+    <nav class="mainnav" id="mainnav" aria-label="Menu chính"></nav>
+    <div class="top-actions">
+      <a href="#wallet" class="wallet-chip" id="walletChip" title="Số dư"></a>
+      <details class="acct-menu" id="acctMenu">
+        <summary class="avatar" id="avatarBtn" aria-label="Tài khoản"></summary>
+        <div class="dropdown right" id="acctDropdown"></div>
+      </details>
       <button class="theme-btn" title="Đổi giao diện sáng/tối" aria-label="Đổi giao diện">◐</button>
-    </nav>
+      <button class="menu-btn" aria-label="Mở menu" aria-expanded="false" aria-controls="drawer">☰</button>
+    </div>
   </header>
+
+  <div class="drawer-backdrop" id="drawerBackdrop" hidden></div>
+  <aside class="drawer" id="drawer" aria-label="Menu" hidden>
+    <div class="drawer-head"><strong id="drawerName"></strong><button class="drawer-close" id="drawerClose" aria-label="Đóng menu">✕</button></div>
+    <div id="drawerBody"></div>
+  </aside>
 
   <main id="app" tabindex="-1"></main>
 
@@ -30,6 +35,7 @@
   </footer>
 
   <script src="data.js"></script>
+  <script src="data-extra.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

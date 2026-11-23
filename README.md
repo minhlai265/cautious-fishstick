@@ -9,7 +9,12 @@ Trang web luyện thi IELTS (Academic) đủ 4 kỹ năng, chạy hoàn toàn tr
 - **Speaking**: Part 1 theo chủ đề, Part 2 cue card (1 phút chuẩn bị + 2 phút nói), Part 3; đọc câu hỏi bằng giọng nói, ghi âm và nghe lại.
 - **Từ vựng**: 36 từ theo 6 chủ đề – flashcard, quiz, danh sách, phát âm.
 - **Tiến độ**: lịch sử làm bài và band ước tính từng kỹ năng + overall (lưu trong localStorage).
+- **Menu** kiểu thư viện đề: thả xuống trên máy tính, ngăn kéo dạng accordion trên điện thoại.
+- **Bộ đề tổng hợp**, **Mẹo IELTS** (8 bài), **Lộ trình học cá nhân**, **Lớp trực tuyến** (lịch mẫu, đăng ký), **Khóa học** (3 khóa, tự đánh dấu tiến độ), **Du học** (mức IELTS tham khảo + công cụ kiểm tra), **HSK Test** (quiz HSK 1).
+- **Tài khoản**: bảng điều khiển, ví credit (nạp demo, không thanh toán thật), dịch vụ luyện thi, hồ sơ, mã giới thiệu.
 - Giao diện sáng/tối, responsive trên điện thoại.
+
+> Các phần lớp trực tuyến, ví, dịch vụ và giới thiệu hiện là bản demo phía trình duyệt (lưu trong localStorage). Muốn chạy thật cần thêm máy chủ, cổng thanh toán và hệ thống tài khoản.
 
 ## Chạy
 Mở `index.html` bằng trình duyệt, hoặc:

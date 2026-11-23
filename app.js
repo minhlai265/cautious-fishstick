@@ -138,7 +138,7 @@
         input = `<input type="text" name="${name}" autocomplete="off" spellcheck="false" aria-label="Câu ${n}">`;
         return `<div class="q" data-q="${name}"><span class="num">${n}</span>${parts[0]}${input}${parts[1] || ""}<div class="feedback"></div></div>`;
       }).join("");
-      return `<section class="q-group"><h3>${esc(g.title)}</h3><div class="instr">${esc(g.instr)}</div><div class="questions">${items}</div></section>`;
+      return `<section class="q-group"><h3>${esc(g.title)}</h3><div class="instr">${esc(g.instr)}</div>${g.list ? `<div class="card small" style="padding:10px 16px;margin-bottom:10px"><strong>List of Headings</strong>${g.list.map((l) => `<div>${esc(l)}</div>`).join("")}</div>` : ""}<div class="questions">${items}</div></section>`;
     }).join("");
   }
 

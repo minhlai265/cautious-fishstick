@@ -228,7 +228,7 @@ window.IELTS_DATA = {
         chart: {
           kind: "line",
           unit: "%",
-          max: 70,
+          max: 75,
           categories: ["2000", "2005", "2010", "2015", "2020"],
           series: [
             { name: "Car", values: [62, 58, 50, 41, 35] },
